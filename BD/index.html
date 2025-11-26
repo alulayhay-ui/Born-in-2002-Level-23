@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEVEL 23 ENTRY SYSTEM</title>
+  <style>
+    .intro-overlay{
+      position:fixed;
+      inset:0;
+      z-index:20;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:radial-gradient(circle at top, rgba(123,182,255,0.24), rgba(0,0,0,0.95));
+      backdrop-filter:blur(10px);
+    }
+    .intro-panel{
+      width:min(480px,90%);
+      padding:26px 26px 22px;
+      border-radius:18px;
+      background:rgba(10,12,28,0.9);
+      border:1px solid rgba(255,201,119,0.8);
+      box-shadow:0 0 30px rgba(0,0,0,0.85),0 0 26px rgba(255,201,119,0.45);
+      text-align:center;
+    }
+    .intro-title{
+      font-size:24px;
+      letter-spacing:1px;
+      color:#ffc977;
+      margin-bottom:8px;
+    }
+    .intro-sub{
+      font-size:13px;
+      opacity:0.9;
+      margin-bottom:16px;
+    }
+    .intro-meta{
+      font-size:14px;
+      margin-bottom:4px;
+    }
+    .intro-meta span.label{opacity:0.75;}
+    .intro-btn{
+      margin-top:18px;
+      width:100%;
+      padding:11px 0;
+      border-radius:999px;
+      border:none;
+      background:linear-gradient(135deg,#5ba8ff,#ffc977);
+      color:#050816;
+      font-weight:600;
+      cursor:pointer;
+    }
+    .intro-note{font-size:11px;opacity:0.7;margin-top:8px;}
+
+    :root { --neon:#5be4ff; --gold:#ffc857; }
+    *{box-sizing:border-box;}
+    html,body{height:100%;margin:0;padding:0;}
+    body{
+      font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+      background:radial-gradient(circle at top,#182642 0,#050816 40%,#02030a 100%);
+      color:#e6f0ff;
+      display:flex;align-items:center;justify-content:center;
+      overflow:hidden;position:relative;
+    }
+    .stars{
+      position:fixed;inset:0;
+      background:radial-gradient(circle,rgba(255,255,255,.3) 1px,transparent 1px);
+      background-size:3px 3px;opacity:.22;
+      animation:starDrift 40s linear infinite;
+      pointer-events:none;z-index:0;
+    }
+    @keyframes starDrift{from{transform:translateY(0);}to{transform:translateY(-900px);}}
+    .tribal{
+      position:fixed;inset:0;
+      background:
+        radial-gradient(circle at 0 0,rgba(91,228,255,.35),transparent 55%),
+        radial-gradient(circle at 100% 100%,rgba(255,200,87,.3),transparent 55%),
+        url("assets/patterns/puyuma.png") center/40% repeat;
+      mix-blend-mode:screen;opacity:.16;
+      animation:tribalPulse 7s ease-in-out infinite;
+      pointer-events:none;z-index:0;
+    }
+    @keyframes tribalPulse{0%,100%{opacity:.08;filter:blur(0);}50%{opacity:.22;filter:blur(1px);}}
+    #particles{position:fixed;inset:0;z-index:1;pointer-events:none;}
+    .wrap{position:relative;z-index:5;width:min(1040px,100%);padding:20px;}
+    .card{
+      display:grid;grid-template-columns:1.05fr 1.2fr;gap:22px;
+      padding:24px;border-radius:20px;
+      background:linear-gradient(135deg,rgba(9,12,30,.95),rgba(7,5,20,.97));
+      border:1px solid rgba(91,228,255,.7);
+      box-shadow:0 0 25px rgba(0,0,0,.8),0 0 35px rgba(91,228,255,.4);
+      backdrop-filter:blur(16px);
+    }
+    @media(max-width:900px){
+      body{align-items:flex-start;}
+      .wrap{padding-top:26px;}
+      .card{grid-template-columns:1fr;padding:20px;}
+      .preview-col{display:none;}
+    }
+    .preview-col{display:flex;align-items:center;justify-content:center;}
+    .char-frame{
+      position:relative;width:100%;max-width:320px;aspect-ratio:3/4;
+      border-radius:18px;overflow:hidden;
+      background:radial-gradient(circle at top,rgba(91,228,255,.3),rgba(0,0,0,.95));
+      border:1px solid rgba(255,200,87,.8);
+      box-shadow:0 0 24px rgba(255,200,87,.5),0 0 32px rgba(91,228,255,.4);
+    }
+    .char-img{position:relative;width:100%;height:100%;object-fit:cover;z-index:1;}
+    .char-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(3,4,12,.95),transparent 55%);z-index:2;}
+    .char-meta{position:absolute;left:10px;right:10px;bottom:10px;z-index:3;font-size:12px;color:#fff7dd;}
+    .char-name{font-weight:700;font-size:16px;margin-bottom:3px;}
+    .char-tag{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;border:1px solid rgba(255,244,210,.8);background:rgba(5,5,10,.85);}
+    .char-tag span:first-child{color:var(--gold);}
+    .panel{display:flex;flex-direction:column;gap:10px;}
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:4px 10px;border-radius:999px;
+      border:1px solid rgba(91,228,255,.8);
+      background:radial-gradient(circle at 0 0,rgba(91,228,255,.4),transparent 60%);
+      font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--neon);
+    }
+    h1{margin:6px 0 4px;font-size:24px;color:#fff7dd;text-shadow:0 0 10px rgba(91,228,255,.7),0 0 20px rgba(255,200,87,.6);}
+    .subtitle{font-size:13px;opacity:.9;margin-bottom:12px;}
+    .field-label{font-size:12px;margin-bottom:4px;display:flex;justify-content:space-between;}
+    .field-label span.hint{opacity:.65;}
+    input[type="text"],input[type="file"]{
+      width:100%;padding:10px 12px;border-radius:10px;
+      border:1px solid rgba(112,138,204,.9);
+      background:radial-gradient(circle at top,rgba(91,228,255,.07),rgba(5,7,20,.96));
+      color:#f3f6ff;font-size:14px;outline:none;
+    }
+    input[type="text"]:focus{border-color:var(--neon);box-shadow:0 0 0 1px rgba(91,228,255,.4);}
+    input[type="file"]{font-size:12px;cursor:pointer;}
+    button{
+      margin-top:4px;width:100%;padding:11px 14px;border-radius:999px;
+      border:none;font-size:14px;font-weight:600;cursor:pointer;
+      color:#050816;
+      background:linear-gradient(135deg,var(--gold),var(--neon));
+      box-shadow:0 0 18px rgba(255,200,87,.6),0 0 24px rgba(91,228,255,.55);
+    }
+    #loadingBar{margin-top:10px;width:100%;height:9px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(91,228,255,.5);overflow:hidden;display:none;}
+    #loadingFill{height:100%;width:0%;background:linear-gradient(90deg,var(--neon),var(--gold));box-shadow:0 0 12px rgba(91,228,255,.8);transition:width .35s ease;}
+    .error{margin-top:8px;color:#ff8484;font-size:12px;display:none;}
+    .note{margin-top:6px;font-size:11px;opacity:.78;}
+  </style>
+</head>
+<body>
+
+  <div class="intro-overlay" id="introOverlay">
+    <div class="intro-panel">
+      <div class="intro-title">Born in 2002：Level 23</div>
+      <div class="intro-sub">歡迎來到Alulayhay．Sawawan 鄭彥軍的 23 歲生日儀式登入系統。</div>
+      <div class="intro-meta"><span class="label">時間：</span>12/20 晚上 10：30</div>
+      <div class="intro-meta"><span class="label">地點：</span>中壢好樂迪 KTV</div>
+      <button class="intro-btn" id="introStartBtn">開始登入儀式</button>
+      <div class="intro-note">按下後進入玩家登入頁，完成祖靈認證。</div>
+    </div>
+  </div>
+
+  <div class="stars"></div>
+  <div class="tribal"></div>
+  <canvas id="particles"></canvas>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="preview-col">
+        <div class="char-frame">
+          <img id="charPortrait" src="assets/characters/default.png" alt="角色預設立繪" class="char-img" />
+          <div class="char-overlay"></div>
+          <div class="char-meta">
+            <div class="char-name" id="charNamePreview">LEVEL 23 CANDIDATE</div>
+            <div class="char-tag">
+              <span>ENTRY</span>
+              <span id="charPhonePreview">未登入</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="badge">LEVEL 23 ENTRY SYSTEM</div>
+        <h1>Born in 2002 · Login Ritual</h1>
+        <div class="subtitle">
+          祖靈已開啟 <strong>Level 23</strong> 之門，請以上傳立繪與登入資訊完成入場登入。
+        </div>
+
+        <div>
+          <div class="field-label">
+            <span>玩家角色立繪（自拍 / 照片）</span>
+            <span class="hint">手機可直接叫出相機</span>
+          </div>
+          <input type="file" id="avatar" accept="image/*" capture="user" />
+        </div>
+
+        <div>
+          <div class="field-label"><span>玩家姓名 Player Name</span></div>
+          <input id="playerName" type="text" placeholder="例：Kutra 釀酒師 / 你的名字" />
+        </div>
+
+        <div>
+          <div class="field-label">
+            <span>聯絡電話 Phone</span>
+            <span class="hint">至少 8 位數字</span>
+          </div>
+          <input id="phone" type="text" placeholder="例：0912-345-678" />
+        </div>
+
+        <button id="entryBtn" type="button">啟動登入儀式 · INITIATE ENTRY</button>
+
+        <div id="loadingBar"><div id="loadingFill"></div></div>
+        <div id="errorMsg" class="error">請輸入姓名與有效電話（至少 8 位數字）。</div>
+        <div class="note">登入成功後會自動前往「角色創建頁」完成角色資訊設定。</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("particles");
+    let ctx=null;
+    function setupCanvas(){
+      if(!(canvas instanceof HTMLCanvasElement)) return false;
+      const dpr = window.devicePixelRatio || 1;
+      const resize=()=>{
+        canvas.width=window.innerWidth*dpr;
+        canvas.height=window.innerHeight*dpr;
+        canvas.style.width=window.innerWidth+"px";
+        canvas.style.height=window.innerHeight+"px";
+        if(ctx) ctx.setTransform(dpr,0,0,dpr,0,0);
+      };
+      ctx=canvas.getContext("2d");
+      if(!ctx) return false;
+      window.addEventListener("resize",resize);
+      resize();return true;
+    }
+    const canvasReady=setupCanvas();
+    let particles=[];
+    if(canvasReady){
+      class P{
+        constructor(init){this.reset(init);}
+        reset(init){
+          this.x=Math.random()*window.innerWidth;
+          this.y=init?Math.random()*window.innerHeight:window.innerHeight+Math.random()*40;
+          this.size=Math.random()*2+0.7;
+          this.speedY=Math.random()*0.6+0.25;
+          const hue=190+Math.random()*40;
+          this.color=`hsla(${hue},90%,70%,${Math.random()*0.7+0.2})`;
+        }
+        update(){this.y-=this.speedY;if(this.y<-10)this.reset(false);}
+        draw(){ctx.beginPath();ctx.fillStyle=this.color;ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fill();}
+      }
+      function init(n=160){particles=[];for(let i=0;i<n;i++)particles.push(new P(true));}
+      function loop(){ctx.clearRect(0,0,canvas.width,canvas.height);particles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(loop);}
+      init();loop();
+    }
+
+    const avatarInput=document.getElementById("avatar");
+    const charPortrait=document.getElementById("charPortrait");
+    if(avatarInput&&charPortrait){
+      avatarInput.addEventListener("change",e=>{
+        const f=e.target.files&&e.target.files[0];
+        if(!f) return;
+        const reader=new FileReader();
+        reader.onload=ev=>{
+          const dataUrl=ev.target.result;
+          charPortrait.src=dataUrl;
+          try{sessionStorage.setItem("playerAvatar",dataUrl);}catch(err){console.warn("無法儲存頭像",err);}
+        };
+        reader.readAsDataURL(f);
+      });
+    }
+
+    const nameInput=document.getElementById("playerName");
+    const phoneInput=document.getElementById("phone");
+    const namePreview=document.getElementById("charNamePreview");
+    const phonePreview=document.getElementById("charPhonePreview");
+    function updatePreview(){
+      namePreview.textContent=nameInput.value||"LEVEL 23 CANDIDATE";
+      phonePreview.textContent=phoneInput.value||"未登入";
+    }
+    nameInput.addEventListener("input",updatePreview);
+    phoneInput.addEventListener("input",updatePreview);
+
+    const btn=document.getElementById("entryBtn");
+    const bar=document.getElementById("loadingBar");
+    const fill=document.getElementById("loadingFill");
+    const err=document.getElementById("errorMsg");
+
+    btn.addEventListener("click",()=>{
+      err.style.display="none";
+      bar.style.display="block";
+      fill.style.width="28%";
+      setTimeout(()=>{fill.style.width="80%";},320);
+      setTimeout(()=>{
+        const name=nameInput.value.trim();
+        const phone=phoneInput.value.trim();
+        const digits=phone.replace(/\D/g,"");
+        if(!name||digits.length<8){
+          fill.style.width="0";bar.style.display="none";err.style.display="block";return;
+        }
+        fill.style.width="100%";
+        setTimeout(()=>{
+          alert("祖靈已接受你的登入。接下來請完成角色創建。");
+          sessionStorage.setItem("playerName",name);
+          sessionStorage.setItem("playerPhone",phone);
+          window.location.href="character-info.html";
+        },520);
+      },1100);
+    });
+
+    // 開場主題畫面：按下「開始登入儀式」後關閉 overlay
+    (function(){
+      const introBtn = document.getElementById("introStartBtn");
+      const introOverlay = document.getElementById("introOverlay");
+      if(introBtn && introOverlay){
+        introOverlay.style.display = "flex";
+        introBtn.addEventListener("click", ()=> {
+          introOverlay.style.transition = "opacity 0.4s ease";
+          introOverlay.style.opacity = "0";
+          setTimeout(()=>{ introOverlay.style.display = "none"; }, 400);
+        });
+      }
+    })();
+
+  </script>
+
+  <!-- 🔊 背景音樂：音量較小，循環播放 -->
+  <audio id="bgm" src="assets/music/bg.mp3" autoplay loop></audio>
+  <script>
+    (function(){
+      const bgm = document.getElementById("bgm");
+      if (!bgm) return;
+      bgm.volume = 0.15; // 不要太大聲
+
+      // 手機與瀏覽器為了自動播放政策，第一次互動後再確保播放
+      function resumeBgm(){
+        if (bgm.paused) {
+          bgm.play().catch(()=>{});
+        }
+        document.removeEventListener("click", resumeBgm);
+        document.removeEventListener("touchstart", resumeBgm);
+      }
+      document.addEventListener("click", resumeBgm);
+      document.addEventListener("touchstart", resumeBgm);
+    })();
+  </script>
+
+</body>
+</html>

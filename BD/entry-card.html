@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEVEL 23 ─ 入場角色卡</title>
+  <style>
+    :root{
+      --gold:#ffc857;
+      --neon:#5be4ff;
+      --deep:#050816;
+    }
+    *{box-sizing:border-box;}
+    html,body{
+      margin:0;padding:0;
+      height:100%;
+      font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+      background:radial-gradient(circle at top,#1b2742 0,#050816 45%,#000 100%);
+      color:#f4f6ff;
+    }
+    body{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+    }
+    .bg-stars{
+      position:fixed;inset:0;
+      background:radial-gradient(circle,rgba(255,255,255,.25) 1px,transparent 1px);
+      background-size:3px 3px;
+      opacity:.18;
+      animation:starDrift 40s linear infinite;
+      pointer-events:none;z-index:0;
+    }
+    @keyframes starDrift{from{transform:translateY(0);}to{transform:translateY(-900px);}}
+    .bg-tribal{
+      position:fixed;inset:0;
+      background:
+        radial-gradient(circle at 0 0,rgba(91,228,255,.32),transparent 55%),
+        radial-gradient(circle at 100% 100%,rgba(255,200,87,.32),transparent 55%),
+        url("assets/patterns/puyuma.png") center/40% repeat;
+      mix-blend-mode:screen;
+      opacity:.16;
+      pointer-events:none;z-index:0;
+    }
+    .wrap{
+      position:relative;
+      z-index:2;
+      width:100%;
+      max-width:520px;
+    }
+    .card{
+      padding:20px 18px 16px;
+      border-radius:20px;
+      background:linear-gradient(140deg,rgba(10,13,30,.96),rgba(4,5,18,.98));
+      border:1px solid rgba(255,200,87,.9);
+      box-shadow:0 0 26px rgba(0,0,0,.85),0 0 28px rgba(255,200,87,.55);
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"LEVEL 23 ENTRY";
+      position:absolute;
+      top:6px;right:-22px;
+      font-size:10px;
+      letter-spacing:3px;
+      opacity:.45;
+      color:var(--gold);
+      transform:rotate(18deg);
+    }
+    .title{
+      font-size:20px;
+      color:#fff7dd;
+      text-align:center;
+      margin:0 0 2px;
+      text-shadow:0 0 10px rgba(255,200,87,.7),0 0 16px rgba(91,228,255,.7);
+    }
+    .sub{
+      font-size:12px;
+      text-align:center;
+      opacity:.9;
+      margin-bottom:10px;
+    }
+    .tagline{
+      font-size:11px;
+      text-align:center;
+      opacity:.85;
+      margin-bottom:10px;
+    }
+    .divider{
+      height:1px;
+      margin:8px 0 10px;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);
+    }
+    .row{
+      display:flex;
+      justify-content:space-between;
+      gap:6px;
+      margin:2px 0;
+      font-size:13px;
+    }
+    .label{opacity:.78;}
+    .value{font-weight:600;text-align:right;}
+    .role-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.35);
+      font-size:11px;
+      margin-top:4px;
+    }
+    .element-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(91,228,255,.6);
+      font-size:11px;
+      margin-top:4px;
+    }
+    .reminders{
+      margin-top:12px;
+      padding:10px 10px 6px;
+      border-radius:12px;
+      background:rgba(5,10,26,.9);
+      border:1px solid rgba(123,182,255,.5);
+      font-size:12px;
+    }
+    .reminders-title{
+      font-size:12px;
+      font-weight:600;
+      margin-bottom:4px;
+      color:var(--neon);
+    }
+    .reminders ul{
+      padding-left:18px;
+      margin:4px 0;
+    }
+    .reminders li{
+      margin-bottom:2px;
+    }
+    .hint{
+      margin-top:8px;
+      font-size:11px;
+      text-align:center;
+      opacity:.8;
+    }
+    .actions{
+      margin-top:10px;
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      font-size:12px;
+    }
+    .link-btn{
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px solid rgba(123,182,255,.7);
+      background:rgba(4,8,20,.9);
+      color:#e7f1ff;
+      text-decoration:none;
+    }
+    @media(max-width:600px){
+      body{align-items:flex-start;}
+      .wrap{margin-top:18px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-stars"></div>
+  <div class="bg-tribal"></div>
+  <div class="wrap">
+    <div class="card" id="entryCard">
+      <h1 class="title">Born in 2002：Level 23</h1>
+      <div class="sub">入場角色卡 ENTRY PASS</div>
+      <div class="tagline">請將此畫面截圖儲存到相簿，入場報到時出示給工作人員。</div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <div class="label">角色名稱：</div>
+        <div class="value" id="cardCharName">─</div>
+      </div>
+      <div class="row">
+        <div class="label">玩家姓名：</div>
+        <div class="value" id="cardPlayerName">─</div>
+      </div>
+      <div class="row">
+        <div class="label">來自哪裡：</div>
+        <div class="value" id="cardTribe">─</div>
+      </div>
+
+      <div class="row">
+        <div class="label">職業 / 身分：</div>
+        <div class="value"><span class="role-badge" id="cardRole">─</span></div>
+      </div>
+      <div class="row">
+        <div class="label">元素屬性：</div>
+        <div class="value"><span class="element-badge" id="cardElement">─</span></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="reminders">
+        <div class="reminders-title">集合時間地點 / REMINDER</div>
+        <ul>
+          <li>集合時間地點：12/20 (六)晚上 10：30　中壢好樂迪 KTV</li>
+          <li>理性飲酒，喝酒不開車，開車不喝酒！</li>
+          <li>喝酒唱歌要帶錢！</li>
+        </ul>
+      </div>
+
+      <div class="hint">
+        建議操作：在手機上長按截圖或使用螢幕截圖功能，將此角色卡存到相簿方便入場核對。
+      </div>
+
+      <div class="actions">
+        <a href="character-info.html" class="link-btn">← 回到角色創建</a>
+      
+        <a href="https://www.instagram.com/allhsww/?hl=zh-tw" class="link-btn">IG｜有問題私訊</a></div>
+    </div>
+  </div>
+
+  <script>
+    function loadLastCharacter(){
+      let raw=localStorage.getItem("level23LastCharacter");
+      if(!raw){
+        return null;
+      }
+      try{
+        return JSON.parse(raw);
+      }catch(e){
+        console.warn("解析 lastCharacter 失敗",e);
+        return null;
+      }
+    }
+    function applyCard(){
+      const data=loadLastCharacter();
+      const charNameEl=document.getElementById("cardCharName");
+      const playerEl=document.getElementById("cardPlayerName");
+      const tribeEl=document.getElementById("cardTribe");
+      const roleEl=document.getElementById("cardRole");
+      const elemEl=document.getElementById("cardElement");
+      const card=document.getElementById("entryCard");
+      if(!data){
+        charNameEl.textContent="尚未建立角色";
+        playerEl.textContent="請先完成角色創建";
+        tribeEl.textContent="-";
+        roleEl.textContent="─";
+        elemEl.textContent="─";
+        return;
+      }
+      charNameEl.textContent=data.charName||"未命名角色";
+      playerEl.textContent=data.playerName||"Player";
+      tribeEl.textContent=data.tribe||"─";
+      roleEl.textContent=data.role||"─";
+      elemEl.textContent=data.element||"─";
+
+      const role=data.role||"";
+      const element=data.element||"";
+      let border="#ffc857";
+      let glow="rgba(255,200,135,.7)";
+
+      if(element.includes("火")){border="#ff6b6b";glow="rgba(255,107,107,.75)";}
+      else if(element.includes("水")){border="#4aaeff";glow="rgba(74,174,255,.75)";}
+      else if(element.includes("風")){border="#7fd5ff";glow="rgba(127,213,255,.75)";}
+      else if(element.includes("土")){border="#c8a15b";glow="rgba(200,161,91,.75)";}
+      else if(element.includes("星")){border="#ffe27a";glow="rgba(255,226,122,.8)";}
+      else if(element.includes("影")){border="#a18bff";glow="rgba(161,139,255,.75)";}
+
+      if(role.includes("釀酒師")) border="#ffc857";
+      else if(role.includes("舞者")) border="#ff80c8";
+      else if(role.includes("守護者")) border="#5be4ff";
+      else if(role.includes("獵人")) border="#78e38f";
+      else if(role.includes("治療者")) border="#b6ffce";
+      else if(role.includes("策士")) border="#c9a4ff";
+      else if(role.includes("旅人")) border="#ffb480";
+      else if(role.includes("自由客")) border="#7af2ff";
+
+      card.style.borderColor=border;
+      card.style.boxShadow=`0 0 26px ${glow},0 0 34px ${glow}`;
+    }
+    applyCard();
+  </script>
+
+  <!-- 🔊 背景音樂：音量較小，循環播放 -->
+  <audio id="bgm" src="assets/music/bg.mp3" autoplay loop></audio>
+  <script>
+    (function(){
+      const bgm = document.getElementById("bgm");
+      if (!bgm) return;
+      bgm.volume = 0.15; // 不要太大聲
+
+      // 手機與瀏覽器為了自動播放政策，第一次互動後再確保播放
+      function resumeBgm(){
+        if (bgm.paused) {
+          bgm.play().catch(()=>{});
+        }
+        document.removeEventListener("click", resumeBgm);
+        document.removeEventListener("touchstart", resumeBgm);
+      }
+      document.addEventListener("click", resumeBgm);
+      document.addEventListener("touchstart", resumeBgm);
+    })();
+  </script>
+
+</body>
+</html>
