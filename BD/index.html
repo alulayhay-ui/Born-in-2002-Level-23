@@ -189,7 +189,7 @@
             <span>玩家角色立繪（自拍 / 照片）</span>
             <span class="hint">手機可直接叫出相機</span>
           </div>
-          <input type="file" id="avatar" accept="image/*" capture="user" />
+          <input type="file" id="avatarInput" accept="image/*" />
         </div>
 
         <div>
@@ -324,7 +324,7 @@
   </script>
 
   <!-- 🔊 背景音樂：音量較小，循環播放 -->
-  <audio id="bgm" src="assets/music/bg.mp3" autoplay loop></audio>
+  <audio id="bgm" src="assets/music/bg.mp3" loop playsinline></audio>
   <script>
     (function(){
       const bgm = document.getElementById("bgm");
